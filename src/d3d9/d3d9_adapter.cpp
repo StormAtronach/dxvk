@@ -664,8 +664,13 @@ namespace dxvk {
     pCaps->MaxUserClipPlanes         = MaxClipPlanes;
     // Max Vertex Blend Matrices
     pCaps->MaxVertexBlendMatrices    = 4;
-    // Max Vertex Blend Matrix Index
-    pCaps->MaxVertexBlendMatrixIndex = 0;
+    // Max Vertex Blend Matrix Index. The default 0 (no IVB at adapter
+    // level) can be overridden via d3d9.forceMaxVertexBlendMatrixIndex
+    // for callers (e.g. some D3D8 wrappers) that read caps via the
+    // adapter path before any device exists.
+    pCaps->MaxVertexBlendMatrixIndex = options.forceMaxVertexBlendMatrixIndex >= 0
+      ? UINT(options.forceMaxVertexBlendMatrixIndex)
+      : 0;
     // Max Point Size
     pCaps->MaxPointSize              = limits.pointSizeRange[1];
     // Max Primitive Count
