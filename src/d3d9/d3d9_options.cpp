@@ -45,6 +45,7 @@ namespace dxvk {
     this->maxFrameRate                  = config.getOption<int32_t>     ("d3d9.maxFrameRate",                  0);
     this->presentInterval               = config.getOption<int32_t>     ("d3d9.presentInterval",               -1);
     this->shaderModel                   = config.getOption<int32_t>     ("d3d9.shaderModel",                   3u);
+    this->forceMaxVertexBlendMatrixIndex = config.getOption<int32_t>    ("d3d9.forceMaxVertexBlendMatrixIndex", -1);
     this->dpiAware                      = config.getOption<bool>        ("d3d9.dpiAware",                      true);
     this->lenientClear                  = config.getOption<bool>        ("d3d9.lenientClear",                  false);
     this->deferSurfaceCreation          = config.getOption<bool>        ("d3d9.deferSurfaceCreation",          false);

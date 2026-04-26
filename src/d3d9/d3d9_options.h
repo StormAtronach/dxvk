@@ -49,6 +49,15 @@ namespace dxvk {
     /// Set the max shader model the device can support in the caps.
     uint32_t shaderModel;
 
+    /// Override MaxVertexBlendMatrixIndex reported in D3DCAPS9.
+    /// -1 (default) keeps dxvk's defaults: 8 in HWVP, 255 in SWVP.
+    /// Setting this raises the reported cap; useful for D3D8 wrappers
+    /// (e.g. d3d8to9) whose downstream caller drops the field during
+    /// caps translation. Note: HWVP rendering is bounded by the matrix
+    /// slots dxvk actually uploads, so values >8 in HWVP only affect
+    /// the reported cap, not the actual blend capacity.
+    int32_t forceMaxVertexBlendMatrixIndex;
+
     /// Whether or not to set the process as DPI aware in Windows when the API interface is created.
     bool dpiAware;
 

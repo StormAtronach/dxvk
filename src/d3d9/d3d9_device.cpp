@@ -321,8 +321,13 @@ namespace dxvk {
 
     m_adapter->GetDeviceCaps(m_deviceType, pCaps);
 
-    // When in SWVP mode, 256 matrices can be used for indexed vertex blending
-    pCaps->MaxVertexBlendMatrixIndex = m_isSWVP ? 255 : 8;
+    // When in SWVP mode, 256 matrices can be used for indexed vertex blending.
+    // Optionally overridden via d3d9.forceMaxVertexBlendMatrixIndex (default -1
+    // keeps dxvk defaults). Useful when a D3D8 wrapper drops this cap during
+    // translation but the application still needs to hit the IVB shader path.
+    pCaps->MaxVertexBlendMatrixIndex = m_d3d9Options.forceMaxVertexBlendMatrixIndex >= 0
+      ? UINT(m_d3d9Options.forceMaxVertexBlendMatrixIndex)
+      : (m_isSWVP ? 255 : 8);
 
     return D3D_OK;
   }
