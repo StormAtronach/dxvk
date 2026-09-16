@@ -227,6 +227,7 @@ namespace dxvk::wsi {
     LONG exstyle = ::GetWindowLongW(hWindow, GWL_EXSTYLE);
     
     style   &= ~WS_OVERLAPPEDWINDOW;
+    style   |= WS_POPUP;
     exstyle &= ~WS_EX_OVERLAPPEDWINDOW;
     
     ::SetWindowLongW(hWindow, GWL_STYLE, style);
