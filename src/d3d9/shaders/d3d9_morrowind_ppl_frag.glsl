@@ -115,13 +115,14 @@ vec3 calculatePplPointLighting(vec3 normal) {
             ppl.lightPosition[2][light]) - in_ViewPosition.xyz;
 
         float distanceSquared = dot(lightVector, lightVector);
-        float lambert = clamp(dot(normal, lightVector) / sqrt(distanceSquared), 0.0, 1.0);
+        float lightDistance = sqrt(distanceSquared);
+        float lambert = clamp(dot(normal, lightVector) / lightDistance, 0.0, 1.0);
         float attenuation = 1.0
             / (ppl.lightFalloffQuadratic[light] * distanceSquared + ppl.lightFalloffConstant);
 
         // Fade to zero over the last quarter of the light's cutoff distance.
         // An inverse radius of 0 leaves the light unchanged.
-        float fade = clamp(4.0 * sqrt(distanceSquared) * ppl.lightFadeInvRadius[light] - 3.0, 0.0, 1.0);
+        float fade = clamp(4.0 * lightDistance * ppl.lightFadeInvRadius[light] - 3.0, 0.0, 1.0);
         fade = 1.0 - fade * fade;
         attenuation *= fade * fade;
 
