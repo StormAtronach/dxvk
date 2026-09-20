@@ -39,7 +39,8 @@ Two of these apply to every Morrowind session; the rest are opt-in.
   without this MGE XE must disable MSAA to run any effect that samples scene depth.
 - **Native per-pixel-lighting draw packets** — `DrawPplV1` accepts a fully described fixed-function
   lighting draw as one flat struct and issues it with purpose-built shaders, bypassing the D3D9
-  fixed-function state machine.
+  fixed-function state machine. Version 3 packets add a per-light fade to zero before a cutoff
+  distance, the falloff OpenMW uses.
 - **A 32-light fixed-function limit**, up from 8, for both the ordinary path and the native packet.
 - **Indexed vertex blending caps** — `MaxVertexBlendMatrixIndex` is reported as 7 rather than 0, so
   applications that check the cap can use a matrix palette.

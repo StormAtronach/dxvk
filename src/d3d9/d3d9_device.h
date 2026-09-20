@@ -1033,7 +1033,7 @@ namespace dxvk {
 
     void PrepareDraw(D3DPRIMITIVETYPE PrimitiveType, bool UploadVBOs, bool UploadIBOs);
 
-    HRESULT DrawMorrowindPpl(const DxvkMorrowindPplDrawV1& draw);
+    HRESULT DrawMorrowindPpl(const DxvkMorrowindPplDrawV3& draw);
     HRESULT ValidateMorrowindPpl(const DxvkMorrowindPplDrawV1& draw) const;
     void PrepareMorrowindPplDraw(
       D3DPRIMITIVETYPE PrimitiveType,

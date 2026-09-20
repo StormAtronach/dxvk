@@ -546,10 +546,12 @@ namespace dxvk {
     float bumpMatrix[4];
     float bumpLumiScaleBias[2];
     uint32_t reserved[2];
+
+    float lightFadeInvRadius[DXVK_MORROWIND_PPL_MAX_LIGHTS];
   };
 
   static_assert(sizeof(D3D9MorrowindPplStage) == 32);
-  static_assert(sizeof(D3D9MorrowindPplData) == 1920);
+  static_assert(sizeof(D3D9MorrowindPplData) == 2048);
   
   struct D3D9VBO {
     Com<D3D9VertexBuffer, false> vertexBuffer;

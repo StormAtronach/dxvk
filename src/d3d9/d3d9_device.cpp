@@ -7445,8 +7445,13 @@ namespace dxvk {
       | DXVK_MW_PPL_USE_TEXGEN
       | DXVK_MW_PPL_PROJECTIVE_TEXGEN;
 
-    if (draw.structSize != sizeof(draw)
-     || draw.structVersion != DXVK_MORROWIND_PPL_STRUCT_VERSION
+    const bool knownPacket =
+        (draw.structSize == sizeof(DxvkMorrowindPplDrawV1)
+      && draw.structVersion == DXVK_MORROWIND_PPL_STRUCT_VERSION)
+     || (draw.structSize == sizeof(DxvkMorrowindPplDrawV3)
+      && draw.structVersion == DXVK_MORROWIND_PPL_STRUCT_VERSION_V3);
+
+    if (!knownPacket
      || draw.reserved0 != 0u
      || draw.reserved1[0] != 0u
      || draw.reserved1[1] != 0u
@@ -7597,7 +7602,8 @@ namespace dxvk {
 
 
   HRESULT D3D9DeviceEx::DrawMorrowindPpl(
-          const DxvkMorrowindPplDrawV1& packet) {
+          const DxvkMorrowindPplDrawV3& fadePacket) {
+    const DxvkMorrowindPplDrawV1& packet = fadePacket.base;
     HRESULT status = ValidateMorrowindPpl(packet);
     if (FAILED(status))
       return status;
@@ -7633,6 +7639,7 @@ namespace dxvk {
     data.nearFogRange = packet.nearFogRange;
     std::memcpy(data.bumpMatrix, packet.bumpMatrix, sizeof(data.bumpMatrix));
     std::memcpy(data.bumpLumiScaleBias, packet.bumpLumiScaleBias, sizeof(data.bumpLumiScaleBias));
+    std::memcpy(data.lightFadeInvRadius, fadePacket.lightFadeInvRadius, sizeof(data.lightFadeInvRadius));
 
     UINT minVertexIndex = packet.minVertexIndex;
     UINT vertexCount = packet.vertexCount;

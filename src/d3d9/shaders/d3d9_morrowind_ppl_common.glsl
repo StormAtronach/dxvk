@@ -64,6 +64,8 @@ struct MorrowindPplData {
     vec4 bumpMatrix;
     vec2 bumpLumiScaleBias;
     uvec2 reserved;
+
+    float lightFadeInvRadius[MorrowindPplMaxLights];
 };
 
 #define CBV_MORROWIND_PPL 7

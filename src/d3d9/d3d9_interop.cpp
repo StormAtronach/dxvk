@@ -632,8 +632,10 @@ namespace dxvk {
     // client can authorize its irreversible engine patch on the renderer as a
     // whole, not just on the native draw path. The static_asserts in
     // dxvk_morrowind_interop.h are what let this build make that claim.
+    // The V3 bit adds the light fade on top of V2, which stays accepted.
     return DXVK_MORROWIND_CAP_PPL_DRAW_V1
          | DXVK_MORROWIND_CAP_PPL_DRAW_V2
+         | DXVK_MORROWIND_CAP_PPL_DRAW_V3
          | DXVK_MORROWIND_CAP_EXPANDED_LIGHT_LIMIT;
   }
 
@@ -642,12 +644,21 @@ namespace dxvk {
     if (!draw)
       return E_POINTER;
 
-    if (draw->structSize != sizeof(DxvkMorrowindPplDrawV1)
-     || draw->structVersion != DXVK_MORROWIND_PPL_STRUCT_VERSION)
+    const bool isV2 = draw->structSize == sizeof(DxvkMorrowindPplDrawV1)
+                   && draw->structVersion == DXVK_MORROWIND_PPL_STRUCT_VERSION;
+    const bool isV3 = draw->structSize == sizeof(DxvkMorrowindPplDrawV3)
+                   && draw->structVersion == DXVK_MORROWIND_PPL_STRUCT_VERSION_V3;
+
+    if (!isV2 && !isV3)
       return E_INVALIDARG;
 
+    // A version 2 packet is the version 3 prefix and renders without fade.
     D3D9DeviceLock lock = m_device->LockDevice();
-    DxvkMorrowindPplDrawV1 packet = *draw;
+    DxvkMorrowindPplDrawV3 packet = { };
+    if (isV3)
+      packet = *reinterpret_cast<const DxvkMorrowindPplDrawV3*>(draw);
+    else
+      packet.base = *draw;
     return m_device->DrawMorrowindPpl(packet);
   }
 
