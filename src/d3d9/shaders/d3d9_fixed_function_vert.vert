@@ -632,6 +632,18 @@ Lighting computeLighting(vec4 vertex, vec3 normal) {
                 atten = fma(dist, atten, light.Attenuation0);
                 atten = 1.0 / atten;
                 atten = spvNMin(atten, FloatMaxValue);
+
+                // Fade to zero over the last quarter of the range rather than
+                // stepping at it, the curve OpenMW uses. D3D9 specifies a hard
+                // cutoff and the line below still enforces it; this only shapes
+                // the approach, and at Range itself the fade is already zero. A
+                // light that leaves Range at its default never reaches the fade,
+                // so anything that does not set a finite range is untouched.
+                float invRange = light.Range > 0.0 ? 1.0 / light.Range : 0.0;
+                float rangeFade = clamp(fma(4.0 * dist, invRange, -3.0), 0.0, 1.0);
+                rangeFade = 1.0 - rangeFade * rangeFade;
+                atten *= rangeFade * rangeFade;
+
                 atten = dist > light.Range ? 0.0 : atten;
 
                 hitDir = normalize(delta);

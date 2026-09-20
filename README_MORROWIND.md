@@ -18,7 +18,7 @@ distributed under the zlib license, which is retained unchanged in `LICENSE`.
 
 ## What this fork changes
 
-Two of these apply to every Morrowind session; the rest are opt-in.
+Some of these apply to every Morrowind session; the rest are opt-in.
 
 **Always active with Morrowind:**
 
@@ -31,6 +31,11 @@ Two of these apply to every Morrowind session; the rest are opt-in.
 - **Fixed-function state update fast paths** — `SetTransform` no longer dirties the fixed-function
   constant buffer when handed an unchanged matrix, and spot-light cone angles are computed at
   `SetLight` time rather than once per light per constant buffer update.
+- **A soft `D3DLIGHT9::Range`** — fixed-function point and spot lights fade to zero over the last
+  quarter of their range, the curve OpenMW uses, instead of stepping to zero at it. The hard cutoff at `Range`
+  is still enforced, so this only shapes the approach, and a light left at the default infinite
+  range never reaches the fade. MGE XE puts its per-pixel light fade distance in this field so the
+  ordinary path and the native packet agree.
 
 **Exposed through a private COM interface, used only if MGE XE asks for it:**
 
